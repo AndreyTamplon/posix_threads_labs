@@ -23,7 +23,7 @@ int main() {
 	}
 	err = pthread_join(pthread, NULL);
 	if (err != 0) {
-		printf("Cannot join a thread %s\n", strerror(err));
+		fprintf(stderr, "Cannot join a thread %s\n", strerror(err));
 		pthread_exit(NULL);
 	}
 	PrintSampleTextFromMainThread();

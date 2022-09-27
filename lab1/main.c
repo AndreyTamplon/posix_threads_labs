@@ -19,7 +19,7 @@ int main() {
 	pthread_t pthread;
 	int err = pthread_create(&pthread, NULL, PrintSampleText, NULL);
 	if (err != 0) {
-		printf("Cannot create a thread %s\n", strerror(err));
+		fprintf(stderr,"Cannot create a thread %s\n", strerror(err));
 		return 1;
 	}
 	PrintSampleTextFromMainThread();
