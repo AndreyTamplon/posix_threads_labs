@@ -2,6 +2,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 typedef struct {
 	int iterate_from;
@@ -32,6 +33,16 @@ int main(int argc, char** argv) {
 		return EXIT_FAILURE;
 	}
 	int number_of_threads = atoi(argv[1]);
+	FILE* max_pid_file = fopen("/proc/sys/kernel/pid_max", "r");
+	int max_pid;
+	if(fscanf(max_pid_file, "%d", &max_pid) != 1) {
+		fprintf(stderr, "Error reading max pid\n");
+		return EXIT_FAILURE;
+	}
+	if (number_of_threads > max_pid) {
+		number_of_threads = max_pid - 100;
+		fprintf(stderr, "Number of threads was set to %d, because you wanted too much\n", number_of_threads);
+	}
 	ThreadArgs args[number_of_threads];
 	pthread_t threads[number_of_threads];
 	int number_of_iterations = atoi(argv[2]) + 1;
@@ -57,6 +68,7 @@ int main(int argc, char** argv) {
 		pi += *(double*)partial_sum;
 		free(partial_sum);
 	}
-	printf("pi = %.15g \n", pi * 4.0);
-	return 0;
+	printf("calculated pi = %.15g \n", pi * 4.0);
+	printf("pi = %.15g \n", M_PI);
+	pthread_exit(NULL);
 }
